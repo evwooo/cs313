@@ -12,32 +12,34 @@ class Shape {
     int vertices;
     Point** points;
 
-    Shape (int _vertices) {
-        vertices = _vertices;
-        points = new Point*[vertices+1];
-    }
-
-    ~Shape () {
-    }
-
-    void addPoints (Point* pts) {
-        for (int i = 0; i <= vertices; i++) {
-            memcpy(points[i], &pts[i%vertices], sizeof(Point));
+    public:
+        Shape (int _vertices) {
+            vertices = _vertices;
+            points = new Point*[vertices+1];
         }
-    }
 
-    double* area () {
-        int temp = 0;
-        for (int i = 0; i <= vertices; i++) {
-            // FIXME: there are two methods to access members of pointers
-            //        use one to fix lhs and the other to fix rhs
-            int lhs = points[i]->x * points[i+1]->y; 
-            int rhs = (*points[i+1]).x * (*points[i]).y; // -> does the equivalent of (*<pointer>).
-            temp += (lhs - rhs);
+        ~Shape () {
         }
-        double area = abs(temp)/2.0;
-        return &area; //dangling pointer?
-    }
+
+    
+        void addPoints (Point* pts) {
+            for (int i = 0; i <= vertices; i++) {
+                memcpy(points[i], &pts[i%vertices], sizeof(Point));
+            }
+        }
+
+        double* area () {
+            int temp = 0;
+            for (int i = 0; i <= vertices; i++) {
+                // FIXME: there are two methods to access members of pointers
+                //        use one to fix lhs and the other to fix rhs
+                int lhs = points[i]->x * points[i+1]->y; 
+                int rhs = (*points[i+1]).x * (*points[i]).y; // -> does the equivalent of (*<pointer>).
+                temp += (lhs - rhs);
+            }
+            double area = abs(temp)/2.0;
+            return &area; //dangling pointer?
+        }
 };
 
 int main () {
@@ -56,8 +58,8 @@ int main () {
 
     // adding points to tri
     Point triPts[3] = {tri1, tri2, tri3};
-    Shape* tri = new Shape(3);
-    tri.addPoints(triPts);
+    Shape* tri = new Shape(3); //need to make constructors and methods public so main() can access
+    tri->addPoints(triPts); //tri is pter, so ->
 
     // FIXME: create the following points using your preferred struct
     //        definition:
@@ -69,7 +71,7 @@ int main () {
     // adding points to quad
     Point quadPts[4] = {quad1, quad2, quad3, quad4};
     Shape* quad = new Shape(4);
-    quad.addPoints(quadPts);
+    quad->addPoints(quadPts);
 
     // FIXME: print out area of tri and area of quad
     std::cout << "Triangle area: " << tri->area() << std::endl;
