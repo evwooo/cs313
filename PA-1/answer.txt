@@ -1,0 +1,21 @@
+1. Create files of varying sizes and record the time it takes to transfer them. Visualize the execution time vs file size. Does the trend make sense?
+
+1KB: 0.001s
+50KB: 0.026s
+1024KB: 0.524s
+51200KB: 26.214s
+
+Once visualized, the execuation time vs file size graph shows a positive, linear relationship.
+This trend makes sense because we can expect the execution time to grow as file size grows.
+The linearality can be explained by the fact that we always
+do the same amount and duration of work for each "trip" to transfer the files.
+
+
+2. What is the main bottleneck that stops the code from transferring files faster? Describe in one or two sentences
+
+The main bottleneck is the small message size limit of 256 bytes, 
+which forces the system to break large files into hundreds of thousands of small chunks. 
+Each chunk requires a complete round-trip communication (a request + response), 
+so a 100MB file needs >500,000 separate rount-trip messages, 
+making the transfer slower.
+
